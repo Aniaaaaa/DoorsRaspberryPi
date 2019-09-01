@@ -41,20 +41,24 @@ public class DoorsOpener {
     private JSONArray doors_ids;
     private HashMap<String, String> doors_mapping;
 
-    public static void main(String args[]) throws SocketException {
+    public static void main(String args[]) throws SocketException, InterruptedException {
         for (String arg : args)
             System.out.println(arg);
 
         new DoorsOpener().run(args[0]);
     }
 
-    private void run(String serverIp) {
+    private void run(String serverIp) throws InterruptedException{
         SERVER_IP_ADDRESS = serverIp;
         getRaspberryPIAddress();
         generateKeys();
         writeDoorsIds();
         getServerPublicKey();
         postRaspberryInformation();
+        while (true) {
+            getDoorsState();
+            Thread.sleep(5000);
+        }
     }
 
     private void writeDoorsIds() {
@@ -207,5 +211,37 @@ public class DoorsOpener {
         System.out.println("encrypted message: " + encryptedMessage);
         return encryptedMessage;
 
+    }
+
+    public void getDoorsState() {
+        System.out.println("getDoorState");
+        String baseUrl = getBaseUrl();
+        String relativeUrl = "/nfcData/getDoorsState";
+        String finalUrl = baseUrl + relativeUrl;
+        try {
+            Response response = asyncHttpClient
+                    .prepareGet(finalUrl)
+                    .execute()
+                    .get();
+            if (response.getStatusCode() == 200) {
+                String responseFromServer = response.getResponseBody();
+                JSONObject obj = new JSONObject(responseFromServer);
+                JSONArray arr = obj.getJSONArray("doors");
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject doorObj = arr.getJSONObject(i);
+                    String id = doorObj.getString("door_id");
+                    Boolean door_state = doorObj.getBoolean("door_state");
+                    if (door_state) {
+                        openDoor(id);
+                    } else {
+                        closeDoor(id);
+                    }
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Exception: " + e.getMessage());
+        } catch (ExecutionException e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
     }
 }
