@@ -7,6 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import static java.lang.System.exit;
 import static org.asynchttpclient.Dsl.asyncHttpClient;
 
 
@@ -51,7 +52,9 @@ public class DoorsOpener {
     public static void main(String args[]) throws SocketException, InterruptedException {
         for (String arg : args)
             System.out.println(arg);
-
+        if (args[0] == null) {
+            System.exit(1);
+        }
         new DoorsOpener().run(args[0]);
     }
 
@@ -76,10 +79,11 @@ public class DoorsOpener {
 
             if (userTerminates()) {
                 doLoop = false;
-           }
+            }
         }
         System.out.println("Exiting program");
         gpio.shutdown();
+        System.exit(0);
     }
 
     private boolean userTerminates() {
@@ -183,7 +187,7 @@ public class DoorsOpener {
     public void getServerPublicKey() {
         System.out.println("getServerPublicKey");
         String baseUrl = getBaseUrl();
-        String relativeUrl = "/nfcData/getServerPublicKey";
+        String relativeUrl = "/nfcData/getPublicKey2048";
         String finalUrl = baseUrl + relativeUrl;
         try {
             Response response = asyncHttpClient
@@ -210,7 +214,7 @@ public class DoorsOpener {
     public void postRaspberryInformation() {
         System.out.println("postRaspberryInformation");
         String baseUrl = getBaseUrl();
-        String relativeUrl = "/nfcData/postRaspberryInformation";
+        String relativeUrl = "/nfcData/installRaspberryDevice";
         String finalUrl = baseUrl + relativeUrl;
         try {
             //createJson
@@ -288,7 +292,7 @@ public class DoorsOpener {
     public void getDoorsState() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
         System.out.println("getDoorState");
         String baseUrl = getBaseUrl();
-        String relativeUrl = "/nfcData/getDoorsState";
+        String relativeUrl = "/nfcData/openTheDoorInformation";
         String finalUrl = baseUrl + relativeUrl;
         try {
             Response response = asyncHttpClient
