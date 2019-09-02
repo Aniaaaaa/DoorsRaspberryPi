@@ -36,6 +36,9 @@ public class DoorsOpener {
     private AsyncHttpClient asyncHttpClient = asyncHttpClient();
     private String SERVER_PUBLIC_KEY;
 
+    private final String MALINKA_PRIVATE_KEY = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCPn8ka6crhcM8muDgdm0S4FJvNh4jljmwK9t1FvIFge1MAryaIiaT6g6uBHZgxdYZUmE4BAR3bQovNBRkW6oGKZWQ24OBKaKFhpJA7uEgItLQCpvHYSpvZAghrDVd9e2KhWSToXMpxy3haYaDZd8vtt3ucN07eW1HH5ZSwDdA2Hmy3/aB6noXxtTMnlYmeyeIZMEUy9dV1yXoXWF7MQe2vpqb/2SSdWUQaAe7ZWMAQCi0YHpAWOS9wcQ82vrWVUpKvMk/bHQytP/GuVlrcgiahPVLprrua8tdw12ttFCLDSp5G+QghcOSmEzUZo8sInRGITc1obZaqAtcl+oh+YXvLAgMBAAECggEAIJHtuyq1lXZNo8w2/Y/Of6g8xNktlFE98yaUe1IKTOTqp8cQh/oe7aiaZgdeEilCs0BuwA+Ow8BNj8rOK8I2ajogBcntUzJzFn+JLeHWhBLml4tgYNpaiVXKruwxoQUwEsLyebdBOZkYy/ZD0c0288uePojUW9x9qUVI+LvJMdxRJAZSj1O575kVx7RYvDijKcaLzNWfMfTkp7RNaskbe7VCysDJKlcMpfu9mn2xZF7uVtMsqL52qfXsqlWc6jYn384DeiwE0iNLe81MAUYRjgzpdScGK2dFairbhRkz4h0e99LgFAk9mM8KOKE2smNc3aOoFE+5ARogLtsjsPWSQQKBgQDRFIkuukSIqK+tQtFbmfkHjHspyxzhYpaEPD5MYPCUKKwbtnJWt9un527Jf3iifXVHqYOUFEqzPf8INhp+HTGiunznw5k4aEjXGObcYzkpAIvgNPmWs+soFrS5Bw92o3XDJlzFM/uF3goAo2z0P4c3Y69g2zqPuLICkhfLZFvKOwKBgQCv2twy0RbkmJWJL+9E/MPpN+VYQWkyOwWl0U0tRY0dxsSNSNuOw59R56xWD01/RcB/f3XAprAbG97Pf6ej4yWwoxA62v6XxaKRw0aAZKXsXba6OTrBBhRQarOQz2x0Qf0k51KBTSN8/lGRNSW6k9vQ9kYzo+fMrErZLVbB/exrsQKBgGiUeg3ac99baQwkKO5FtQ+2kACWrSp7ksgwDgVMU+n38iamesivjHqOw5acYS39zQT8YGlYQQkpEID99wBv/9zipQmUh/Z0C0M0HH3OT9AXit+p/9IGyrAxs1H9mxl/p67maG7nkn8iUiSBmkUN5cep4BZ1cfRjsP6iLq6400TzAoGACuDI+kPA3McriN70OBpCrCyO/VSeg0LvaIB3+7LvtcXT5sF5A23KbzCbkn9D1fmknL5vtEkbX7HrqH5HCnZEoJaVrG5bjVvmYInp1ItlUCfD4+UiY0pS+15+WRjbpp1mYWAF1IXHCjZZKVhWSyJWWKjDUvJyplCKGMEbOsjQVSECgYBySKZa7Z1p0NarOKlPQ7U/zFjO7faO99c7OJKwb9itTck6iwBqXMkVeV0wv1S9AV8/TC9xCfDz7KbA2XZIWpEWCo+zXWnESXQ6hnpgN5ORKzOgbOaxiCabkJaOHTn4Jz9kKejLYk+gEE9JDIeHNnHAi/Vjfw8hKlmdG+iHbjC3gQ==";
+    private final String MALINKA_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAj5/JGunK4XDPJrg4HZtEuBSbzYeI5Y5sCvbdRbyBYHtTAK8miImk+oOrgR2YMXWGVJhOAQEd20KLzQUZFuqBimVkNuDgSmihYaSQO7hICLS0Aqbx2Eqb2QIIaw1XfXtioVkk6FzKcct4WmGg2XfL7bd7nDdO3ltRx+WUsA3QNh5st/2gep6F8bUzJ5WJnsniGTBFMvXVdcl6F1hezEHtr6am/9kknVlEGgHu2VjAEAotGB6QFjkvcHEPNr61lVKSrzJP2x0MrT/xrlZa3IImoT1S6a67mvLXcNdrbRQiw0qeRvkIIXDkphM1GaPLCJ0RiE3NaG2WqgLXJfqIfmF7ywIDAQAB";
+
 
     private String raspberryIp;
 
@@ -64,7 +67,7 @@ public class DoorsOpener {
         checkOutput();
         SERVER_IP_ADDRESS = serverIp;
         getRaspberryPIAddress();
-        generateKeys();
+        //generateKeys();
         writeDoorsIds();
         getServerPublicKey();
         postRaspberryInformation();
@@ -76,10 +79,9 @@ public class DoorsOpener {
             } catch (Exception e) {
                 System.out.println("Exception: " + e);
             }
-
-            if (userTerminates()) {
+            /*if (userTerminates()) {
                 doLoop = false;
-            }
+           }*/
         }
         System.out.println("Exiting program");
         gpio.shutdown();
@@ -88,9 +90,10 @@ public class DoorsOpener {
 
     private boolean userTerminates() {
         Scanner scanner = new Scanner(System.in);
-
-        //If you want that user terminates it with 'c' char
-        return scanner.nextLine().equals("c");
+        if (scanner.hasNext())
+            //If you want that user terminates it with 'c' char
+            return scanner.nextLine().equals("c");
+        return false;
     }
 
     private void createOutput(GpioController gpio) {
@@ -108,7 +111,7 @@ public class DoorsOpener {
             pin1.toggle();
             pin2.toggle();
             ledOn = !ledOn;
-            Thread.sleep(10000);
+            Thread.sleep(7500);
         }
     }
 
@@ -152,7 +155,7 @@ public class DoorsOpener {
 
     private void generateKeys() {
         try {
-            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA", "SunRsaSign");
 
             // Initialize KeyPairGenerator.
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
@@ -179,7 +182,7 @@ public class DoorsOpener {
     }
 
     private void closeDoor(String id) {
-        System.out.println("CloseDoor id: " + id);
+        System.out.println("Close door id: " + id);
         doors_mapping.get(id).low();
     }
 
@@ -187,7 +190,7 @@ public class DoorsOpener {
     public void getServerPublicKey() {
         System.out.println("getServerPublicKey");
         String baseUrl = getBaseUrl();
-        String relativeUrl = "/nfcData/getPublicKey2048";
+        String relativeUrl = "/nfcData/getPublicKey4096";
         String finalUrl = baseUrl + relativeUrl;
         try {
             Response response = asyncHttpClient
@@ -221,10 +224,12 @@ public class DoorsOpener {
             JSONObject jsonUserData = new JSONObject();
             jsonUserData.put("ip", raspberryIp);
 
-            jsonUserData.put("public_key", publicKey.toString());
+            //jsonUserData.put("public_key", Base64.getEncoder().encodeToString(publicKey.getEncoded()));
+            jsonUserData.put("public_key", MALINKA_PUBLIC_KEY);
             jsonUserData.put("doors_id", doors_ids);
             String message = prepareEncryptedMessage(jsonUserData);
-            Part part = new StringPart("postRaspberryInformation", message);
+            //String message = jsonUserData.toString();
+            Part part = new StringPart("installRaspberryDevice", message);
 
             Response response = asyncHttpClient
                     .preparePost(finalUrl)
@@ -237,17 +242,18 @@ public class DoorsOpener {
                 System.out.println("Server public key: " + SERVER_PUBLIC_KEY);
             }
         } catch (InterruptedException e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("InterruptedException: " + e.getMessage());
+            System.out.println();
         } catch (ExecutionException e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("ExecutionException: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Exception: " + e);
+            System.out.println(e.getStackTrace());
         }
     }
 
     private String prepareEncryptedMessage(JSONObject jsonObject) throws NoSuchAlgorithmException, InvalidKeySpecException, JSONException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
 
-        //String publicKeyString = SERVER_PUBLIC_KEY;
         byte[] publicKeyBytes = Base64.getDecoder().decode(SERVER_PUBLIC_KEY);
 
         KeyFactory kf = KeyFactory.getInstance("RSA"); // or "EC" or whatever
@@ -294,13 +300,23 @@ public class DoorsOpener {
         String baseUrl = getBaseUrl();
         String relativeUrl = "/nfcData/openTheDoorInformation";
         String finalUrl = baseUrl + relativeUrl;
+
         try {
+            //createJson
+            JSONObject jsonUserData = new JSONObject();
+            jsonUserData.put("doors_ids", doors_ids);
+            String message = jsonUserData.toString();
+            Part part = new StringPart("openTheDoorInformation", message);
+
             Response response = asyncHttpClient
-                    .prepareGet(finalUrl)
+                    .preparePost(finalUrl)
+                    .addBodyPart(part)
                     .execute()
                     .get();
             if (response.getStatusCode() == 200) {
-                String responseFromServer = decodeMessage(response.getResponseBody(), Base64.getEncoder().encodeToString(privateKey.getEncoded()));
+                System.out.println(response.getResponseBody());
+                String responseFromServer = decodeMessage(response.getResponseBody(),/* Base64.getEncoder().encodeToString(privateKey.getEncoded())*/MALINKA_PRIVATE_KEY);
+                System.out.println("Server decoded response: " + responseFromServer);
                 JSONObject obj = new JSONObject(responseFromServer);
                 JSONArray arr = obj.getJSONArray("doors");
                 for (int i = 0; i < arr.length(); i++) {
@@ -320,4 +336,5 @@ public class DoorsOpener {
             System.out.println("Exception: " + e.getMessage());
         }
     }
+
 }
