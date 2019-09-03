@@ -305,7 +305,7 @@ public class DoorsOpener {
             //createJson
             JSONObject jsonUserData = new JSONObject();
             jsonUserData.put("doors_ids", doors_ids);
-            String message = jsonUserData.toString();
+            String message = prepareEncryptedMessage(jsonUserData);
             Part part = new StringPart("openTheDoorInformation", message);
 
             Response response = asyncHttpClient
@@ -313,6 +313,7 @@ public class DoorsOpener {
                     .addBodyPart(part)
                     .execute()
                     .get();
+
             if (response.getStatusCode() == 200) {
                 System.out.println(response.getResponseBody());
                 String responseFromServer = decodeMessage(response.getResponseBody(),/* Base64.getEncoder().encodeToString(privateKey.getEncoded())*/MALINKA_PRIVATE_KEY);
